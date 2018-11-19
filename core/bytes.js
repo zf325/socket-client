@@ -1,0 +1,303 @@
+"use strict";
+
+const Buffer = require("buffer");
+const Long = require("long");
+
+class Bytes{
+
+    constructor(arg,endian = "LE"){
+
+        if(typeof arg == "Buffer" || typeof arg == "Array"){
+            this._readBuffer = Buffer.from(arg);
+        }else {
+
+            if(typeof arg == "number"){
+                this._writeBuffer = Buffer.alloce(arg);
+            }
+
+            this._writeBuffer = typeof arg == "number" ? Buffer.alloce(arg) : Buffer.alloce(1024);
+
+        }
+        //position
+        this._readPosition = 0;
+        this._writePosition = 0;
+        this._valMemery = [];//decode data memery
+        //end order
+        this._littleEndian = endian == "BE" ? false : true;
+
+    }
+
+    getInt8(){
+
+        let val = this._readBuffer.readInt8(this._readPosition);
+        this._readPosition ++;
+        if(val){
+            this._valMemery.push(val);
+        }
+        return this;
+    }
+
+    getUInt8(){
+
+        let val = this._readBuffer.readUInt8(this._readPosition);
+        this._readPosition ++;
+
+        if(val){
+            this._valMemery.push(val);
+        }
+
+        return this;
+    }
+
+    getUInt16(){
+
+        let val = this._littleEndian ? this._readBuffer.readUInt16LE(this._readPosition)
+            : this._readBuffer.readUInt16BE(this._readPosition);
+        this._readPosition += 2;
+        if(val){
+            this._valMemery.push(val);
+        }
+        return this;
+    }
+
+    getInt16(){
+
+        let val = this._littleEndian ? this._readBuffer.readInt16LE(this._readPosition)
+            : this._readBuffer.readInt16BE(this._readPosition);
+        this._readPosition += 2;
+        if(val){
+            this._valMemery.push(val);
+        }
+        return this;
+    }
+
+    getUInt32(){
+
+        let val = this._littleEndian ? this._readBuffer.readUInt32LE(this._readPosition)
+            : this._readBuffer.readUInt32BE(this._readPosition);
+        this._readPosition += 4;
+        if(val){
+            this._valMemery.push(val);
+        }
+        return this;
+    }
+
+    getInt32(){
+
+        let val = this._littleEndian ? this._readBuffer.readInt32LE(this._readPosition)
+            : this._readBuffer.readInt32BE(this._readPosition);
+        this._readPosition += 4;
+        if(val){
+            this._valMemery.push(val);
+        }
+        return this;
+    }
+
+    getUInt64(){
+
+        if(this._readBuffer.length - this._readPosition < 8){
+            throw new Error("bytes not enough to be converted to long [type] data.")
+        }
+
+        const longBytes = this._readBuffer.slice(this._readPosition,this._readPosition + 8);
+
+        let val = this._littleEndian ? Long.fromBytesLE(longBytes,true)
+            : Long.fromBytesBE(longBytes,true);
+
+        this._readPosition += 8;
+
+        if(val){
+            this._valMemery.push(val);
+        }
+        return this;
+    }
+
+    getInt64(){
+
+        if(this._readBuffer.length - this._readPosition < 8){
+            throw new Error("bytes not enough to be converted to long [type] data.")
+        }
+
+        const longBytes = this._readBuffer.slice(this._readPosition,this._readPosition + 8);
+
+        let val = this._littleEndian ? Long.fromBytesLE(longBytes,false)
+            : Long.fromBytesBE(longBytes,false);
+
+        this._readPosition += 8;
+
+        if(val){
+            this._valMemery.push(val);
+        }
+        return this;
+    }
+
+    getFloat(){
+
+        let val = this._littleEndian ? this._readBuffer.readFloatLE(this._readPosition)
+            : this._readBuffer.readFloatBE(this._readPosition);
+        this._readPosition += 4;
+
+        if(val){
+            this._valMemery.push(val);
+        }
+
+        return this;
+
+    }
+
+    getDouble(){
+
+        let val = this._littleEndian ? this._readBuffer.readDoubleLE(this._readPosition)
+            : this._readBuffer.readDoubleBE(this._readPosition);
+        this._readPosition += 8;
+
+        if(val){
+            this._valMemery.push(val);
+        }
+
+        return this;
+
+    }
+
+    format(){
+
+        if(!this._valMemery || this._valMemery.length < 1 ){
+            throw new Error("memery no data,format failed.");
+        }
+
+        if(this._valMemery.length == 1){
+
+            let val = this._valMemery[0];
+            this._valMemery = [];
+            return val;
+
+        }else if(this._valMemery.length > 1){
+
+            let val = val.splice(0);
+            this._valMemery = [];
+            return val;
+        }
+
+        return null;
+    }
+
+    checkWriteBufferOverflow(){
+
+        //wirteBuffer less then 16 bytes left, add new 1024 bytes buffer.
+        if(this._writeBuffer.length - this._writePosition < 8){
+            let buf = Buffer.alloce(1024);
+            this._writeBuffer = this._writeBuffer.splice(this._writeBuffer.length , 0 , ...buf);
+        }
+
+    }
+
+    skip(length){
+
+        this.checkWriteBufferOverflow();
+        this._writePosition += length;
+
+    }
+
+    setInt8(val){
+
+        this.checkWriteBufferOverflow();
+        this._writeBuffer.writeInt8(val,this._writePosition);
+        this._writePosition ++;
+
+        return this;
+
+    }
+
+    setUInt16(val){
+        this.checkWriteBufferOverflow();
+        this._littleEndian ? this._writeBuffer.writeUInt16LE(val,this._writePosition)
+            : this._readBuffer.writeUInt16BE(this._writePosition);
+        this._writePosition += 2;
+        return this;
+    }
+
+    setInt16(val){
+        this.checkWriteBufferOverflow();
+        this._littleEndian ? this._writeBuffer.writeInt16LE(val,this._writePosition)
+            : this._readBuffer.writeInt16BE(this._writePosition);
+        this._writePosition += 2;
+        return this;
+    }
+
+    setUInt32(val){
+        this.checkWriteBufferOverflow();
+        this._littleEndian ? this._writeBuffer.writeUInt32LE(val,this._writePosition)
+            : this._readBuffer.writeUInt32BE(this._writePosition);
+        this._writePosition += 2;
+        return this;
+    }
+
+    setInt32(val){
+        this.checkWriteBufferOverflow();
+        this._littleEndian ? this._writeBuffer.writeInt32LE(val,this._writePosition)
+            : this._readBuffer.writeInt32BE(this._writePosition);
+        this._writePosition += 2;
+        return this;
+    }
+
+    setUInt64(val){
+        this.checkWriteBufferOverflow();
+
+        let unsignedLong = Long.from(val,true);//unsigned long
+
+        let unsignedLongByutes = this._littleEndian ? unsignedLong.toBytesLE()
+            : unsignedLong.toBytesBE();
+        this._writeBuffer.fill(Buffer.from(unsignedLongByutes),this._writePosition,this._writePosition + 8);
+
+        this._writePosition += 8;
+        return this;
+
+    }
+
+    setInt64(val){
+        this.checkWriteBufferOverflow();
+
+        let signedLong = Long.from(val,false);//long
+
+        let signedLongByutes = this._littleEndian ? signedLong.toBytesLE()
+            : signedLong.toBytesBE();
+        this._writeBuffer.fill(Buffer.from(signedLongByutes),this._writePosition,this._writePosition + 8);
+
+        this._writePosition += 8;
+        return this;
+
+    }
+
+    setFloat(val){
+        this.checkWriteBufferOverflow();
+        this._littleEndian ? this._writeBuffer.writeFloatLE(val,this._writePosition)
+            : this._readBuffer.writeFloatBE(this._writePosition);
+        this._writePosition += 4;
+        return this;
+    }
+
+    setDouble(val){
+        this.checkWriteBufferOverflow();
+        this._littleEndian ? this._writeBuffer.writeDouble32LE(val,this._writePosition)
+            : this._readBuffer.writeDouble32BE(this._writePosition);
+        this._writePosition += 8;
+        return this;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+}
+
+module.exports = Bytes;
