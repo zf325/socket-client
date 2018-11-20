@@ -1,21 +1,19 @@
 "use strict";
-
-const Buffer = require("buffer");
 const Long = require("long");
 
 class Bytes{
 
     constructor(arg,endian = "LE"){
 
-        if(typeof arg == "Buffer" || typeof arg == "Array"){
+        if( arg instanceof Buffer ||  arg instanceof Array){
             this._readBuffer = Buffer.from(arg);
         }else {
 
             if(typeof arg == "number"){
-                this._writeBuffer = Buffer.alloce(arg);
+                this._writeBuffer = Buffer.alloc(arg);
             }
 
-            this._writeBuffer = typeof arg == "number" ? Buffer.alloce(arg) : Buffer.alloce(1024);
+            this._writeBuffer = typeof arg == "number" ? Buffer.alloc(arg) : Buffer.alloc(1024);
 
         }
         //position
@@ -29,6 +27,10 @@ class Bytes{
 
     getInt8(){
 
+        if(this._readBuffer.length - this._readPosition < 1){
+            throw new Error("bytes remained not enough to read");
+        }
+
         let val = this._readBuffer.readInt8(this._readPosition);
         this._readPosition ++;
         if(val){
@@ -38,6 +40,10 @@ class Bytes{
     }
 
     getUInt8(){
+
+        if(this._readBuffer.length - this._readPosition < 1){
+            throw new Error("bytes remained not enough to read");
+        }
 
         let val = this._readBuffer.readUInt8(this._readPosition);
         this._readPosition ++;
@@ -51,6 +57,10 @@ class Bytes{
 
     getUInt16(){
 
+        if(this._readBuffer.length - this._readPosition < 2){
+            throw new Error("bytes remained not enough to read");
+        }
+
         let val = this._littleEndian ? this._readBuffer.readUInt16LE(this._readPosition)
             : this._readBuffer.readUInt16BE(this._readPosition);
         this._readPosition += 2;
@@ -61,7 +71,9 @@ class Bytes{
     }
 
     getInt16(){
-
+        if(this._readBuffer.length - this._readPosition < 2){
+            throw new Error("bytes remained not enough to read");
+        }
         let val = this._littleEndian ? this._readBuffer.readInt16LE(this._readPosition)
             : this._readBuffer.readInt16BE(this._readPosition);
         this._readPosition += 2;
@@ -72,7 +84,10 @@ class Bytes{
     }
 
     getUInt32(){
-
+     
+        if(this._readBuffer.length - this._readPosition < 4){
+            throw new Error("bytes remained not enough to read");
+        }
         let val = this._littleEndian ? this._readBuffer.readUInt32LE(this._readPosition)
             : this._readBuffer.readUInt32BE(this._readPosition);
         this._readPosition += 4;
@@ -83,6 +98,10 @@ class Bytes{
     }
 
     getInt32(){
+
+        if(this._readBuffer.length - this._readPosition < 4){
+            throw new Error("bytes remained not enough to read");
+        }
 
         let val = this._littleEndian ? this._readBuffer.readInt32LE(this._readPosition)
             : this._readBuffer.readInt32BE(this._readPosition);
@@ -95,8 +114,8 @@ class Bytes{
 
     getUInt64(){
 
-        if(this._readBuffer.length - this._readPosition < 8){
-            throw new Error("bytes not enough to be converted to long [type] data.")
+        if(this._readBuffer.length - this._readPosition < 8 ){
+            throw new Error("bytes remained not enough to read");
         }
 
         const longBytes = this._readBuffer.slice(this._readPosition,this._readPosition + 8);
@@ -114,8 +133,8 @@ class Bytes{
 
     getInt64(){
 
-        if(this._readBuffer.length - this._readPosition < 8){
-            throw new Error("bytes not enough to be converted to long [type] data.")
+        if(this._readBuffer.length - this._readPosition < 8 ){
+            throw new Error("bytes remained not enough to read");
         }
 
         const longBytes = this._readBuffer.slice(this._readPosition,this._readPosition + 8);
@@ -133,6 +152,10 @@ class Bytes{
 
     getFloat(){
 
+        if(this._readBuffer.length - this._readPosition < 4 ){
+            throw new Error("bytes remained not enough to read");
+        }
+
         let val = this._littleEndian ? this._readBuffer.readFloatLE(this._readPosition)
             : this._readBuffer.readFloatBE(this._readPosition);
         this._readPosition += 4;
@@ -146,6 +169,10 @@ class Bytes{
     }
 
     getDouble(){
+
+        if(this._readBuffer.length - this._readPosition < 8 ){
+            throw new Error("bytes remained not enough to read");
+        }
 
         let val = this._littleEndian ? this._readBuffer.readDoubleLE(this._readPosition)
             : this._readBuffer.readDoubleBE(this._readPosition);
@@ -173,7 +200,7 @@ class Bytes{
 
         }else if(this._valMemery.length > 1){
 
-            let val = val.splice(0);
+            let val = this._valMemery.splice(0);
             this._valMemery = [];
             return val;
         }
@@ -183,9 +210,8 @@ class Bytes{
 
     checkWriteBufferOverflow(){
 
-        //wirteBuffer less then 16 bytes left, add new 1024 bytes buffer.
         if(this._writeBuffer.length - this._writePosition < 8){
-            let buf = Buffer.alloce(1024);
+            let buf = Buffer.alloc(1024);
             this._writeBuffer = this._writeBuffer.splice(this._writeBuffer.length , 0 , ...buf);
         }
 
@@ -283,20 +309,6 @@ class Bytes{
         this._writePosition += 8;
         return this;
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 }
 
