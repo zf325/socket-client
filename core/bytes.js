@@ -33,9 +33,7 @@ class Bytes{
 
         let val = this._readBuffer.readInt8(this._readPosition);
         this._readPosition ++;
-        if(val){
-            this._valMemery.push(val);
-        }
+        this._valMemery.push(val);
         return this;
     }
 
@@ -47,11 +45,7 @@ class Bytes{
 
         let val = this._readBuffer.readUInt8(this._readPosition);
         this._readPosition ++;
-
-        if(val){
-            this._valMemery.push(val);
-        }
-
+        this._valMemery.push(val);
         return this;
     }
 
@@ -64,9 +58,7 @@ class Bytes{
         let val = this._littleEndian ? this._readBuffer.readUInt16LE(this._readPosition)
             : this._readBuffer.readUInt16BE(this._readPosition);
         this._readPosition += 2;
-        if(val){
-            this._valMemery.push(val);
-        }
+        this._valMemery.push(val);
         return this;
     }
 
@@ -74,12 +66,11 @@ class Bytes{
         if(this._readBuffer.length - this._readPosition < 2){
             throw new Error("bytes remained not enough to read");
         }
+
         let val = this._littleEndian ? this._readBuffer.readInt16LE(this._readPosition)
             : this._readBuffer.readInt16BE(this._readPosition);
         this._readPosition += 2;
-        if(val){
-            this._valMemery.push(val);
-        }
+        this._valMemery.push(val);
         return this;
     }
 
@@ -91,9 +82,7 @@ class Bytes{
         let val = this._littleEndian ? this._readBuffer.readUInt32LE(this._readPosition)
             : this._readBuffer.readUInt32BE(this._readPosition);
         this._readPosition += 4;
-        if(val){
-            this._valMemery.push(val);
-        }
+        this._valMemery.push(val);
         return this;
     }
 
@@ -106,9 +95,7 @@ class Bytes{
         let val = this._littleEndian ? this._readBuffer.readInt32LE(this._readPosition)
             : this._readBuffer.readInt32BE(this._readPosition);
         this._readPosition += 4;
-        if(val){
-            this._valMemery.push(val);
-        }
+        this._valMemery.push(val);
         return this;
     }
 
@@ -124,10 +111,7 @@ class Bytes{
             : Long.fromBytesBE(longBytes,true);
 
         this._readPosition += 8;
-
-        if(val){
-            this._valMemery.push(val);
-        }
+        this._valMemery.push(val);
         return this;
     }
 
@@ -143,10 +127,7 @@ class Bytes{
             : Long.fromBytesBE(longBytes,false);
 
         this._readPosition += 8;
-
-        if(val){
-            this._valMemery.push(val);
-        }
+        this._valMemery.push(val);
         return this;
     }
 
@@ -159,10 +140,7 @@ class Bytes{
         let val = this._littleEndian ? this._readBuffer.readFloatLE(this._readPosition)
             : this._readBuffer.readFloatBE(this._readPosition);
         this._readPosition += 4;
-
-        if(val){
-            this._valMemery.push(val);
-        }
+        this._valMemery.push(val);
 
         return this;
 
@@ -177,11 +155,7 @@ class Bytes{
         let val = this._littleEndian ? this._readBuffer.readDoubleLE(this._readPosition)
             : this._readBuffer.readDoubleBE(this._readPosition);
         this._readPosition += 8;
-
-        if(val){
-            this._valMemery.push(val);
-        }
-
+        this._valMemery.push(val);
         return this;
 
     }
