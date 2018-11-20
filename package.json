@@ -4,7 +4,7 @@
   "description": "tcp scoket client for nodejs to connect to socket server using other language.",
   "main": "app.js",
   "scripts": {
-    "test": "node app.js"
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
@@ -22,6 +22,7 @@
   },
   "homepage": "https://github.com/zf325/socket-client#readme",
   "dependencies": {
+    "expect": "^23.6.0",
     "long": "^4.0.0"
   },
   "devDependencies": {
