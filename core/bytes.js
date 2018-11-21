@@ -111,7 +111,7 @@ class Bytes{
             : Long.fromBytesBE(longBytes,true);
 
         this._readPosition += 8;
-        this._valMemery.push(val);
+        this._valMemery.push(val.toString());
         return this;
     }
 
@@ -127,7 +127,7 @@ class Bytes{
             : Long.fromBytesBE(longBytes,false);
 
         this._readPosition += 8;
-        this._valMemery.push(val);
+        this._valMemery.push(val.toString());
         return this;
     }
 
@@ -254,7 +254,7 @@ class Bytes{
     setUInt64(val){
         this.checkWriteBufferOverflow();
 
-        let unsignedLong = Long.from(val,true);//unsigned long
+        let unsignedLong = Long.fromValue(val,true);//unsigned long
 
         let unsignedLongByutes = this._littleEndian ? unsignedLong.toBytesLE()
             : unsignedLong.toBytesBE();
@@ -268,7 +268,7 @@ class Bytes{
     setInt64(val){
         this.checkWriteBufferOverflow();
 
-        let signedLong = Long.from(val,false);//long
+        let signedLong = Long.fromValue(val,false);//long
 
         let signedLongByutes = this._littleEndian ? signedLong.toBytesLE()
             : signedLong.toBytesBE();
