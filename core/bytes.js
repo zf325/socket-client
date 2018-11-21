@@ -198,6 +198,17 @@ class Bytes{
 
     }
 
+    
+    setUInt8(val){
+
+        this.checkWriteBufferOverflow();
+        this._writeBuffer.writeUInt8(val,this._writePosition);
+        this._writePosition ++;
+
+        return this;
+
+    }
+
     setInt8(val){
 
         this.checkWriteBufferOverflow();
@@ -228,7 +239,7 @@ class Bytes{
         this.checkWriteBufferOverflow();
         this._littleEndian ? this._writeBuffer.writeUInt32LE(val,this._writePosition)
             : this._readBuffer.writeUInt32BE(this._writePosition);
-        this._writePosition += 2;
+        this._writePosition += 4;
         return this;
     }
 
@@ -236,7 +247,7 @@ class Bytes{
         this.checkWriteBufferOverflow();
         this._littleEndian ? this._writeBuffer.writeInt32LE(val,this._writePosition)
             : this._readBuffer.writeInt32BE(this._writePosition);
-        this._writePosition += 2;
+        this._writePosition += 4;
         return this;
     }
 
@@ -278,10 +289,21 @@ class Bytes{
 
     setDouble(val){
         this.checkWriteBufferOverflow();
-        this._littleEndian ? this._writeBuffer.writeDouble32LE(val,this._writePosition)
-            : this._readBuffer.writeDouble32BE(this._writePosition);
+        this._littleEndian ? this._writeBuffer.writeDoubleLE(val,this._writePosition)
+            : this._readBuffer.writeDoubleBE(this._writePosition);
         this._writePosition += 8;
         return this;
+    }
+
+    toBytes(){
+
+        if(this._writePosition > 0){
+
+            return this._writeBuffer.slice(0,this._writePosition);
+        }else{
+            return [];
+        }
+
     }
 
 }
