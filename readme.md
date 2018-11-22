@@ -1,5 +1,12 @@
 # Socket-client
 
+node 实现与其他语言完成 TCP 通信的方案。
+1. Bytes 模块：提供各类型数据与二进制数据互转的方法，提供了二进制协议自定义的能力，有效扩展 RPC 的通用性；
+
+2. Packet 模块：完成对 TCP 包的封包和拆包实现；
+
+3. client 模块： 完成 NodeJS socket 客户端连接的实现。
+
 ## 1. bytes
 
  ### 1.1 decode
