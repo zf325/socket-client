@@ -79,4 +79,66 @@ node 实现与其他语言完成 TCP 通信的方案。
 
  ### 1.2 encode 
 
- 1. 
+ 1. toBytes()
+    
+    将对应类型的数据转成二进制数组。
+
+ 2. setInt8()
+
+    将 char 类型 转成 1 个字节的二进制数据。
+    
+    返回 Bytes 对象。
+
+ 3. setUInt8()
+
+    将 unsigned char 类型 转成 1 个字节的二进制数据。
+
+    返回 Bytes 对象。
+
+ 4. setUInt16()
+
+    将 unsigned short 类型 转成 2 个字节的二进制数据。
+
+    返回 Bytes 对象。
+
+ 5. setInt16()
+
+    将 short 类型 转成 2 个字节的二进制数据。
+
+    返回 Bytes 对象。
+
+ 6. setUInt32()
+
+    将 unsigned int 类型 转成 4 个字节的二进制数据。
+
+    返回 Bytes 对象。
+
+ 7. setInt32()
+
+    将 int 类型 转成 4 个字节的二进制数据。
+
+    返回 Bytes 对象。
+
+ 8. setUInt64()
+
+   将 unsigned long int 类型 转成 8 个字节的二进制数据。
+
+    返回 Bytes 对象。
+
+ 9. setInt64()
+
+    将 long int 类型 转成 8 个字节的二进制数据。
+
+    返回 Bytes 对象。
+
+ 10. setFloat()
+
+    将 float 类型 转成 4 个字节的二进制数据。
+
+    返回 Bytes 对象。
+
+ 11. setDouble()
+
+     将 double 类型 转成 8 个字节的二进制数据。
+
+    返回 Bytes 对象。
