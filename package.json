@@ -22,7 +22,8 @@
   },
   "homepage": "https://github.com/zf325/socket-client#readme",
   "dependencies": {
-    "long": "^4.0.0"
+    "long": "^4.0.0",
+    "merge": "^1.2.1"
   },
   "devDependencies": {
     "mocha": "^5.2.0",
