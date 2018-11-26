@@ -4,7 +4,9 @@ const Bytes = require("./bytes");
 
 class Packet {
 
-    constructor(callback,{headerLength = 2 ,size = 1024}){
+    constructor(callback,opts = {}){
+
+        const {headerLength = 2 ,size = 1024} = opts;
 
         this._readBuffer = [];
         this._writeBuffer = [];
